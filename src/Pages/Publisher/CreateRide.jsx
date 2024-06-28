@@ -16,6 +16,7 @@ const CreateRide = () => {
   const [date_of_journey, setDateOfJourney] = useState("");
   const [time_of_journey, setTimeOfJourney] = useState("");
   const [fare_per_seat, setFarePerSeats] = useState("");
+  const [initialFare, setInitialFare] = useState(""); // New state to hold the initially fetched fare
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState({});
   const [showModal, setShowModal] = useState(false);
@@ -32,6 +33,14 @@ const CreateRide = () => {
     if (!time_of_journey)
       tempErrors.time_of_journey = "Time of Journey is required";
     if (!fare_per_seat) tempErrors.fare_per_seats = "Fare Per Seat is required";
+    if (
+      parseFloat(fare_per_seat) < parseFloat(initialFare) - 200 ||
+      parseFloat(fare_per_seat) > parseFloat(initialFare) + 200
+    ) {
+      tempErrors.fare_per_seats = `Fare Per Seat must be between ${
+        parseFloat(initialFare) - 200
+      } and ${parseFloat(initialFare) + 200}`;
+    }
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
@@ -59,6 +68,7 @@ const CreateRide = () => {
             );
             if (fareResponse.status === 200) {
               setFarePerSeats(fareResponse.data.totalFare);
+              setInitialFare(fareResponse.data.totalFare); // Set the initial fare
               const JourneyResponse = await axios.post(
                 "http://13.201.203.99:8094/fare/calculateJourneyTime",
                 {
@@ -80,8 +90,8 @@ const CreateRide = () => {
     fetchDistanceAndFare();
     // Set minimum time to the current time
     const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
     setMinTime(`${hours}:${minutes}`);
   }, [from_location, to_location]);
 
@@ -274,7 +284,7 @@ const CreateRide = () => {
                 htmlFor="fare_per_seats"
                 className="block text-gray-700 mb-2"
               >
-                Fare Per Seat(in Rupees)
+                Fare Per Seat (in Rupees)
               </label>
               <input
                 type="number"
@@ -283,8 +293,13 @@ const CreateRide = () => {
                 name="fare_per_seats"
                 className="w-full p-2 border border-gray-300 rounded-md"
                 value={fare_per_seat}
-                readOnly
+                min={parseFloat(initialFare) - 200} // Use initialFare for validation
+                max={parseFloat(initialFare) + 200} // Use initialFare for validation
+                onChange={(e) => setFarePerSeats(e.target.value)}
               />
+              {errors.fare_per_seats && (
+                <p className="text-red-500 text-sm">{errors.fare_per_seats}</p>
+              )}
             </div>
             <div className="mb-6">
               <label htmlFor="about_ride" className="block text-gray-700 mb-2">
@@ -316,10 +331,10 @@ const CreateRide = () => {
           className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-black bg-opacity-50"
         >
           <div className="relative p-4 w-full max-w-md max-h-full">
-            <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <div className="relative bg-white rounded-lg shadow">
               <button
                 type="button"
-                className="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                className="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
                 onClick={closeModal}
               >
                 <svg
@@ -341,7 +356,7 @@ const CreateRide = () => {
               </button>
               <div className="p-4 md:p-5 text-center">
                 <svg
-                  className="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+                  className="mx-auto mb-4 text-gray-400 w-12 h-12"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -355,19 +370,19 @@ const CreateRide = () => {
                     d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                   />
                 </svg>
-                <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                <h3 className="mb-5 text-lg font-normal text-gray-500">
                   Are you sure you want to publish this ride?
                 </h3>
                 <button
                   type="button"
-                  className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
+                  className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
                   onClick={handleConfirm}
                 >
                   Yes, I'm sure
                 </button>
                 <button
                   type="button"
-                  className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                  className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
                   onClick={closeModal}
                 >
                   No, cancel

@@ -9,8 +9,8 @@ const Home = () => {
   const [ridesDetail, setRideDetail] = useRides();
   return (
     <Layout>
-      <p>{JSON.stringify(auth)}</p>
-      <p>{JSON.stringify(ridesDetail)}</p>
+      {/* <p>{JSON.stringify(auth)}</p>
+      <p>{JSON.stringify(ridesDetail)}</p> */}
       <MainContent/>
     </Layout>
   );

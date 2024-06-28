@@ -27,6 +27,7 @@ const MyRides = () => {
         `http://13.201.203.99:8089/user/passengers/cancel/${selectedRide.passengerRideId}`
       );
       if (response.status === 204) {
+        sendPublisherEmail(selectedRide.publisherEmail);
         await axios.post(
           `http://13.201.203.99:8081/email/send-passenger-canceled-notification?passengerEmail=${encodeURIComponent(
             auth.email
@@ -88,7 +89,7 @@ const MyRides = () => {
       }
     } catch (error) {
       console.error("Error processing payment:", error);
-      toast.error("An error occurred during payment");
+      // toast.error("An error occurred during payment");
     }
   };
 
@@ -138,6 +139,15 @@ const MyRides = () => {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
+  const sendPublisherEmail = async(publisherEmail) =>{
+    try {
+      axios.post(`http://13.201.203.99:8081/email/send-pasenger-canceled-notification-publisher?publisherEmail=${encodeURIComponent(
+        publisherEmail)}`)
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <Layout>

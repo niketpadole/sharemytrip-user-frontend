@@ -137,12 +137,12 @@ const Header = () => {
                           >
                             My Rides
                           </NavLink>
-                          <NavLink
+                          {/* <NavLink
                             to="/publisher/transactions"
                             className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
                           >
                             View Transactions
-                          </NavLink>
+                          </NavLink> */}
                           <NavLink
                             to="/publisher/profile"
                             className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
@@ -348,12 +348,12 @@ const Header = () => {
                         >
                           My Rides
                         </NavLink>
-                        <NavLink
+                        {/* <NavLink
                           to="/publisher/transactions"
                           className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
                         >
                           View Transactions
-                        </NavLink>
+                        </NavLink> */}
                         <NavLink
                           to="/publisher/profile"
                           className="block px-4 py-2 text-gray-800 hover:bg-gray-200"

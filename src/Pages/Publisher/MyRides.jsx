@@ -25,6 +25,18 @@ const MyRides = () => {
       .catch((error) => console.error("Error fetching rides:", error));
   }, [auth.id]);
 
+  const sendEmail = async (passengerEmail) => {
+    try {
+      await axios.post(
+        `http://13.201.203.99:8081/email/send-publisher-canceled-notification-passenger?passengerEmail=${encodeURIComponent(
+          passengerEmail
+        )}`
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleViewPassengers = (rideId) => {
     setShowPassengers(!showPassengers);
     setSelectedRide(rideId);
@@ -42,12 +54,16 @@ const MyRides = () => {
       .then(() => {
         setRides((prevRides) =>
           prevRides.map((ride) =>
-            ride.publisherRideId === rideId ? { ...ride, status: "ONGOING" } : ride
+            ride.publisherRideId === rideId
+              ? { ...ride, status: "ONGOING" }
+              : ride
           )
         );
         setFilteredRides((prevRides) =>
           prevRides.map((ride) =>
-            ride.publisherRideId === rideId ? { ...ride, status: "ONGOING" } : ride
+            ride.publisherRideId === rideId
+              ? { ...ride, status: "ONGOING" }
+              : ride
           )
         );
       })
@@ -60,35 +76,66 @@ const MyRides = () => {
       .then(() => {
         setRides((prevRides) =>
           prevRides.map((ride) =>
-            ride.publisherRideId === rideId ? { ...ride, status: "COMPLETED" } : ride
+            ride.publisherRideId === rideId
+              ? { ...ride, status: "COMPLETED" }
+              : ride
           )
         );
         setFilteredRides((prevRides) =>
           prevRides.map((ride) =>
-            ride.publisherRideId === rideId ? { ...ride, status: "COMPLETED" } : ride
+            ride.publisherRideId === rideId
+              ? { ...ride, status: "COMPLETED" }
+              : ride
           )
         );
       })
       .catch((error) => console.error("Error ending ride:", error));
   };
 
-  const handleCancelRide = (rideId) => {
-    axios
-      .delete(`http://13.201.203.99:8090/rides/cancel-published/${rideId}`)
-      .then(() => {
-        setRides((prevRides) =>
-          prevRides.map((ride) =>
-            ride.publisherRideId === rideId ? { ...ride, status: "CANCELED" } : ride
-          )
-        );
-        setFilteredRides((prevRides) =>
-          prevRides.map((ride) =>
-            ride.publisherRideId === rideId ? { ...ride, status: "CANCELED" } : ride
-          )
-        );
-        setShowCancelModal(false);
-      })
-      .catch((error) => console.error("Error canceling ride:", error));
+  const handleCancelRide = async (rideId) => {
+    try {
+      // Fetch the latest passengers data
+      const response = await axios.get(
+        `http://13.201.203.99:8089/user/publishers/${rideId}/passengers`
+      );
+      const passengersData = response.data;
+
+      // Send email to publisher
+      await axios.post(
+        `http://13.201.203.99:8081/email/send-publisher-canceled-notification?publisherEmail=${encodeURIComponent(
+          auth.email
+        )}`
+      );
+
+      // Send email to all passengers
+      for (const passenger of passengersData) {
+        await sendEmail(passenger.passengerEmail);
+      }
+
+      // Delete the ride
+      await axios.delete(
+        `http://13.201.203.99:8090/rides/cancel-published/${rideId}`
+      );
+
+      // Update the state after deletion
+      setRides((prevRides) =>
+        prevRides.map((ride) =>
+          ride.publisherRideId === rideId
+            ? { ...ride, status: "CANCELED" }
+            : ride
+        )
+      );
+      setFilteredRides((prevRides) =>
+        prevRides.map((ride) =>
+          ride.publisherRideId === rideId
+            ? { ...ride, status: "CANCELED" }
+            : ride
+        )
+      );
+      setShowCancelModal(false);
+    } catch (error) {
+      console.error("Error canceling ride:", error);
+    }
   };
 
   const handleFilterChange = (status) => {
@@ -102,7 +149,9 @@ const MyRides = () => {
 
   const isStartButtonEnabled = (ride) => {
     const currentDateTime = new Date();
-    const journeyDateTime = new Date(`${ride.dateOfJourney}T${ride.timeOfJourney}`);
+    const journeyDateTime = new Date(
+      `${ride.dateOfJourney}T${ride.timeOfJourney}`
+    );
     return currentDateTime >= journeyDateTime;
   };
 
@@ -120,7 +169,7 @@ const MyRides = () => {
     <Layout>
       <main className="py-10 bg-[#fff4f1]">
         <h1 className="text-4xl text-center text-red-600 mb-10">My Rides</h1>
-        <section className="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+        <section className="bg-white p-8 rounded-lg shadow-md max-w-6xl mx-auto">
           <h2 className="text-2xl text-red-600 mb-6">Published Rides</h2>
           <div className="mb-4">
             <label className="mr-4">Filter by status:</label>
@@ -144,7 +193,9 @@ const MyRides = () => {
                   <th className="py-2 px-4 bg-gray-200 text-left">To</th>
                   <th className="py-2 px-4 bg-gray-200 text-left">Date</th>
                   <th className="py-2 px-4 bg-gray-200 text-left">Time</th>
-                  <th className="py-2 px-4 bg-gray-200 text-left">Seats</th>
+                  <th className="py-2 px-4 bg-gray-200 text-left">
+                    Seats Available
+                  </th>
                   <th className="py-2 px-4 bg-gray-200 text-left">Fare</th>
                   <th className="py-2 px-4 bg-gray-200 text-left">Status</th>
                   <th className="py-2 px-4 bg-gray-200 text-left">Actions</th>
@@ -153,49 +204,74 @@ const MyRides = () => {
               <tbody>
                 {filteredRides.map((ride) => (
                   <tr key={ride.publisherRideId}>
-                    <td className="border px-4 py-2">{ride.fromLocation}</td>
-                    <td className="border px-4 py-2">{ride.toLocation}</td>
-                    <td className="border px-4 py-2">{ride.dateOfJourney}</td>
-                    <td className="border px-4 py-2">{ride.timeOfJourney}</td>
-                    <td className="border px-4 py-2">{ride.availableSeats}</td>
-                    <td className="border px-4 py-2">{ride.farePerSeat}</td>
-                    <td className="border px-4 py-2">{ride.status}</td>
-                    <td className="border px-4 py-2 flex space-x-2">
-                      <button
-                        onClick={() => handleViewPassengers(ride.publisherRideId)}
-                        className="text-blue-500 hover:text-blue-700"
-                      >
-                        View
-                      </button>
-                      {ride.status !== "COMPLETED" && ride.status !== "CANCELED" && (
-                        <>
-                          <button
-                            onClick={() => handleStartRide(ride.publisherRideId)}
-                            className={`text-green-500 hover:text-green-700 ${
-                              !isStartButtonEnabled(ride) ? "opacity-50 cursor-not-allowed" : ""
-                            }`}
-                            disabled={!isStartButtonEnabled(ride)}
-                          >
-                            Start
-                          </button>
-                          {ride.status === "ONGOING" && (
-                            <button
-                              onClick={() => handleEndRide(ride.publisherRideId)}
-                              className="text-red-500 hover:text-red-700"
-                            >
-                              End
-                            </button>
+                    <td className="border px-4 py-2 text-center">
+                      {ride.fromLocation}
+                    </td>
+                    <td className="border px-4 py-2 text-center">
+                      {ride.toLocation}
+                    </td>
+                    <td className="border px-4 py-2 text-center">
+                      {ride.dateOfJourney}
+                    </td>
+                    <td className="border px-4 py-2 text-center">
+                      {ride.timeOfJourney}
+                    </td>
+                    <td className="border px-4 py-2 text-center">
+                      {ride.availableSeats}
+                    </td>
+                    <td className="border px-4 py-2 text-center">
+                      {ride.farePerSeat}
+                    </td>
+                    <td className="border px-4 py-2 text-center">{ride.status}</td>
+                    <td className="border px-4 py-2 text-center">
+                      <div className="flex justify-center items-center space-x-2">
+                        <button
+                          onClick={() =>
+                            handleViewPassengers(ride.publisherRideId)
+                          }
+                          className="text-blue-500 hover:text-blue-700"
+                        >
+                          View
+                        </button>
+                        {ride.status !== "COMPLETED" &&
+                          ride.status !== "CANCELED" && (
+                            <>
+                              <button
+                                onClick={() =>
+                                  handleStartRide(ride.publisherRideId)
+                                }
+                                className={`text-green-500 hover:text-green-700 ${
+                                  !isStartButtonEnabled(ride)
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : ""
+                                }`}
+                                disabled={!isStartButtonEnabled(ride)}
+                              >
+                                Start
+                              </button>
+                              {ride.status === "ONGOING" && (
+                                <button
+                                  onClick={() =>
+                                    handleEndRide(ride.publisherRideId)
+                                  }
+                                  className="text-red-500 hover:text-red-700"
+                                >
+                                  End
+                                </button>
+                              )}
+                              {ride.status !== "ONGOING" && (
+                                <button
+                                  onClick={() =>
+                                    openCancelModal(ride.publisherRideId)
+                                  }
+                                  className="text-yellow-500 hover:text-yellow-700"
+                                >
+                                  Cancel
+                                </button>
+                              )}
+                            </>
                           )}
-                          {ride.status !== "ONGOING" && (
-                            <button
-                              onClick={() => openCancelModal(ride.publisherRideId)}
-                              className="text-yellow-500 hover:text-yellow-700"
-                            >
-                              Cancel
-                            </button>
-                          )}
-                        </>
-                      )}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -210,19 +286,43 @@ const MyRides = () => {
                 <table className="min-w-full bg-white">
                   <thead>
                     <tr>
-                      <th className="py-2 px-4 bg-gray-200 text-left">Passenger Name</th>
-                      <th className="py-2 px-4 bg-gray-200 text-left">Mobile Number</th>
-                      <th className="py-2 px-4 bg-gray-200 text-left">No. of Seats Booked</th>
-                      <th className="py-2 px-4 bg-gray-200 text-left">Payment Status</th>
+                      <th className="py-2 px-4 bg-gray-200 text-center">
+                        Passenger Name
+                      </th>
+                      <th className="py-2 px-4 bg-gray-200 text-center">
+                        Mobile Number
+                      </th>
+                      <th className="py-2 px-4 bg-gray-200 text-center">
+                        No. of Seats Booked
+                      </th>
+                      <th className="py-2 px-4 bg-gray-200 text-center">
+                        Payment Status
+                      </th>
+                      <th className="py-2 px-4 bg-gray-200 text-center">
+                        Paid Amount
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {passengers.map((passenger, index) => (
                       <tr key={index}>
-                        <td className="border px-4 py-2">{passenger.passengerName}</td>
-                        <td className="border px-4 py-2">{passenger.passengerMobile}</td>
-                        <td className="border px-4 py-2">{passenger.passengerCount}</td>
-                        <td className="border px-4 py-2">{passenger.passengerPaymentStatus}</td>
+                        <td className="border px-4 py-2 text-center">
+                          {passenger.passengerName}
+                        </td>
+                        <td className="border px-4 py-2 text-center">
+                          {passenger.passengerMobile}
+                        </td>
+                        <td className="border px-4 py-2 text-center">
+                          {passenger.passengerCount}
+                        </td>
+                        <td className="border px-4 py-2 text-center">
+                          {passenger.passengerPaymentStatus}
+                        </td>
+                        <td className="border px-4 py-2 text-center">
+                          {passenger.passengerPaymentStatus === "PAID"
+                            ? passenger.fare * passenger.passengerCount
+                            : 0}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

@@ -29,19 +29,26 @@ const PublisherRegister = () => {
   const [errorMessageDrivingLicence, setErrorMessageDrivingLicence] = useState("");
   const [errorMessageAadhar, setErrorMessageAadhar] = useState("");
   const [errorMessageModelName, setErrorMessageModelName] = useState("");
-  const [errorMessageVeichleNumber, setErrorMessageVeichleNumber] = useState("");
+  const [errorMessageVeichleNumber, setErrorMessageVehicleNumber] = useState("");
+  
 
   const validate = () => {
     let isValid = true;
 
     if (!firstName) {
-      setErrorMessageFirstName("First Name Is Required");
+      setErrorMessageFirstName("First Name is required");
       isValid = false;
+    }
+    else if (!/^[a-zA-Z]+$/.test(firstName)) {
+     setErrorMessageFirstName('First Name must be a string');
     }
     if (!lastName) {
-      setErrorMessageLastName("Last Name Is Required");
+      setErrorMessageLastName("Last Name is required");
       isValid = false;
     }
+    else if (!/^[a-zA-Z]+$/.test(lastName)) {
+      setErrorMessageLastName('Last Name must be a string');
+     }
     if (!mobile) {
       setErrorMessageMobile("Mobile Number is Required");
       isValid = false;
@@ -100,7 +107,10 @@ const PublisherRegister = () => {
       isValid = false;
     }
     if (!vehicleNo) {
-      setErrorMessageVeichleNumber("Vehicle Number is required");
+      setErrorMessageVehicleNumber("Vehicle Number is required");
+      isValid = false;
+    } else if (!/^[A-Z]{2}\d{2}[A-Z]{2}\d{4}$/.test(vehicleNo)) {
+      setErrorMessageVehicleNumber("Vehicle Number must be in the format MH56BY2345");
       isValid = false;
     }
 

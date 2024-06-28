@@ -31,10 +31,16 @@ const PassangerRegister = () => {
       setErrorMessageFirstName("First Name is required");
       isValid = false;
     }
+    else if (!/^[a-zA-Z]+$/.test(firstName)) {
+     setErrorMessageFirstName('First Name must be a string');
+    }
     if (!lastName) {
       setErrorMessageLastName("Last Name is required");
       isValid = false;
     }
+    else if (!/^[a-zA-Z]+$/.test(lastName)) {
+      setErrorMessageLastName('Last Name must be a string');
+     }
     if (!mobile) {
       setErrorMessageMobile("Mobile number is required");
       isValid = false;

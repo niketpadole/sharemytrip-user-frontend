@@ -137,7 +137,7 @@ const Login = () => {
             </p>
             <p className="mt-5">
               Don't have an account?{" "}
-              <NavLink to="/register/passenger" className="text-[#ff6f61]">
+              <NavLink to="/register/passanger" className="text-[#ff6f61]">
                 Register here
               </NavLink>
             </p>
