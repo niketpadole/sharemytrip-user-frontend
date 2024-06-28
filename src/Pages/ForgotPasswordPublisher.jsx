@@ -149,7 +149,7 @@ const ForgotPasswordPublisher = () => {
             {otpVerified && (
               <button
                 onClick={() => setShowModal(true)}
-                className="mt-4 w-full bg-blue-700 text-white p-2 rounded-md hover:bg-blue-800"
+                className="mt-4 w-full bg-[#ff6f61] text-white p-2 rounded-md "
               >
                 Reset Password
               </button>
