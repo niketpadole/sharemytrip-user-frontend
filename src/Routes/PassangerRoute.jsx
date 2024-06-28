@@ -10,7 +10,7 @@ const PassangerRoute = () => {
 
   useEffect(() => {
     const checkAuth = () => {
-      if (auth.token == null || auth.userType.toUpperCase() !== "PASSENGER") {
+      if (auth.token == null && auth.userType.toUpperCase() !== "PASSENGER") {
         navigate("/log-in/passanger");
         // setLoading(true);
         // setTimeout(() => {
