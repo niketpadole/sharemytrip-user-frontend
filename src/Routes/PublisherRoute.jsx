@@ -10,7 +10,7 @@ const PublisherRoute = () => {
 
   useEffect(() => {
     const checkAuth = () => {
-      if (auth.token == null || auth.userType.toUpperCase() !== "PUBLISHER") {
+      if (auth.token == null && auth.userType.toUpperCase() !== "PUBLISHER") {
         navigate("/log-in/publisher");
         // setLoading(true);
         // setTimeout(() => {
