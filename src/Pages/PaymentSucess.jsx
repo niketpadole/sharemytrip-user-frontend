@@ -70,13 +70,12 @@ const PaymentSuccess = () => {
           </p>
           <button
             onClick={onStatusChange}
-            className="w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300"
+            className="w-full py-2 px-4 bg-[#ff6f61] text-white rounded  transition duration-300"
           >
             Go to Home
           </button>
         </div>
       </div>
-      <p>{JSON.stringify(ridesDetail)}</p>
     </>
   );
 };
