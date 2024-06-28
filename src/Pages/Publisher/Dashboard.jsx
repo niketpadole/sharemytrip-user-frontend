@@ -16,7 +16,7 @@ const Dashboard = () => {
         setRides(response.data);
       })
       .catch((error) => console.error("Error fetching rides:", error));
-  }, []);
+  }, [auth.id]);
   return (
     <Layout>
       <main className="py-10 bg-[#fff4f1]">
