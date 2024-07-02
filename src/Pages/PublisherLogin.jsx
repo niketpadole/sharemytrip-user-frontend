@@ -30,6 +30,10 @@ const PublisherLogin = () => {
         setErrorMessagePassword("Password Field Is Mandatory");
         return;
       }
+      if(password.length != 8){ 
+        setErrorMessagePassword("Password Must Be 8 digit");
+        return;
+      }
       const response = await axios.post(
         "http://13.201.203.99:8095/user/publishers/login",
         {
