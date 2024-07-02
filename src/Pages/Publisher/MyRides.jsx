@@ -17,7 +17,7 @@ const MyRides = () => {
   useEffect(() => {
     // Fetch ride details from the API
     axios
-      .get(`http://13.201.203.99:8089/user/publishers/${auth.id}/rides`)
+      .get(`http://13.201.203.99:8095/user/publishers/${auth.id}/rides`)
       .then((response) => {
         setRides(response.data);
         setFilteredRides(response.data);
@@ -28,7 +28,7 @@ const MyRides = () => {
   const sendEmail = async (passengerEmail) => {
     try {
       await axios.post(
-        `http://13.201.203.99:8081/email/send-publisher-canceled-notification-passenger?passengerEmail=${encodeURIComponent(
+        `http://13.201.203.99:8095/email/send-publisher-canceled-notification-passenger?passengerEmail=${encodeURIComponent(
           passengerEmail
         )}`
       );
@@ -42,7 +42,7 @@ const MyRides = () => {
     setSelectedRide(rideId);
     if (!showPassengers) {
       axios
-        .get(`http://13.201.203.99:8089/user/publishers/${rideId}/passengers`)
+        .get(`http://13.201.203.99:8095/user/publishers/${rideId}/passengers`)
         .then((response) => setPassengers(response.data))
         .catch((error) => console.error("Error fetching passengers:", error));
     }
@@ -50,7 +50,7 @@ const MyRides = () => {
 
   const handleStartRide = (rideId) => {
     axios
-      .put(`http://13.201.203.99:8089/user/publishers/${rideId}/start`)
+      .put(`http://13.201.203.99:8095/user/publishers/${rideId}/start`)
       .then(() => {
         setRides((prevRides) =>
           prevRides.map((ride) =>
@@ -72,7 +72,7 @@ const MyRides = () => {
 
   const handleEndRide = (rideId) => {
     axios
-      .put(`http://13.201.203.99:8089/user/publishers/${rideId}/end`)
+      .put(`http://13.201.203.99:8095/user/publishers/${rideId}/end`)
       .then(() => {
         setRides((prevRides) =>
           prevRides.map((ride) =>
@@ -96,13 +96,13 @@ const MyRides = () => {
     try {
       // Fetch the latest passengers data
       const response = await axios.get(
-        `http://13.201.203.99:8089/user/publishers/${rideId}/passengers`
+        `http://13.201.203.99:8095/user/publishers/${rideId}/passengers`
       );
       const passengersData = response.data;
 
       // Send email to publisher
       await axios.post(
-        `http://13.201.203.99:8081/email/send-publisher-canceled-notification?publisherEmail=${encodeURIComponent(
+        `http://13.201.203.99:8095/email/send-publisher-canceled-notification?publisherEmail=${encodeURIComponent(
           auth.email
         )}`
       );
@@ -114,7 +114,7 @@ const MyRides = () => {
 
       // Delete the ride
       await axios.delete(
-        `http://13.201.203.99:8090/rides/cancel-published/${rideId}`
+        `http://13.201.203.99:8095/rides/cancel-published/${rideId}`
       );
 
       // Update the state after deletion

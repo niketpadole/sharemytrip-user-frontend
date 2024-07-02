@@ -122,7 +122,7 @@ const PublisherRegister = () => {
       e.preventDefault();
       const validation = validate();
       if (validation) {
-        const response = await axios.post("http://13.201.203.99:8089/user/publishers/register", {
+        const response = await axios.post("http://13.201.203.99:8095/user/publishers/register", {
           firstName,
           lastName,
           mobile,

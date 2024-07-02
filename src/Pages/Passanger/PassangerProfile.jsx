@@ -17,7 +17,7 @@ const PassengerProfile = () => {
 
   const fetchProfileData = async (passengerId) => {
     try {
-      const response = await axios.get(`http://13.201.203.99:8089/user/passengers/${passengerId}`);
+      const response = await axios.get(`http://13.201.203.99:8095/user/passengers/${passengerId}`);
       const profile = response.data;
 
       // Updating state with fetched data
@@ -77,7 +77,7 @@ const PassengerProfile = () => {
     };
 
     try {
-      const response = await axios.put(`http://13.201.203.99:8089/user/passengers/${auth.id}`, updatedProfile);
+      const response = await axios.put(`http://13.201.203.99:8095/user/passengers/${auth.id}`, updatedProfile);
       console.log('Profile updated successfully:', response.data);
       if(response.status === 200) {
         toast.success("Profile updated successfully");

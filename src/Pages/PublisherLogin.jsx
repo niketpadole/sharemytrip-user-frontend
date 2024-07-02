@@ -31,7 +31,7 @@ const PublisherLogin = () => {
         return;
       }
       const response = await axios.post(
-        "http://13.201.203.99:8089/user/publishers/login",
+        "http://13.201.203.99:8095/user/publishers/login",
         {
           email,
           password,

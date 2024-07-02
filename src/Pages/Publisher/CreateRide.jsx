@@ -51,7 +51,7 @@ const CreateRide = () => {
       if (from_location && to_location) {
         try {
           const distanceResponse = await axios.post(
-            "http://13.201.203.99:8094/fare/distance",
+            "http://13.201.203.99:8095/fare/distance",
             {
               fromLocation: from_location,
               toLocation: to_location,
@@ -60,7 +60,7 @@ const CreateRide = () => {
           if (distanceResponse.status === 200) {
             setDistance(distanceResponse.data.distance);
             const fareResponse = await axios.post(
-              "http://13.201.203.99:8094/fare/calculate",
+              "http://13.201.203.99:8095/fare/calculate",
               {
                 fromLocation: from_location,
                 toLocation: to_location,
@@ -70,7 +70,7 @@ const CreateRide = () => {
               setFarePerSeats(fareResponse.data.totalFare);
               setInitialFare(fareResponse.data.totalFare); // Set the initial fare
               const JourneyResponse = await axios.post(
-                "http://13.201.203.99:8094/fare/calculateJourneyTime",
+                "http://13.201.203.99:8095/fare/calculateJourneyTime",
                 {
                   fromLocation: from_location,
                   toLocation: to_location,
@@ -108,7 +108,7 @@ const CreateRide = () => {
         .toTimeString()
         .split(" ")[0];
       const response = await axios.post(
-        `http://13.201.203.99:8089/user/publishers/${auth.id}/rides`,
+        `http://13.201.203.99:8095/user/publishers/${auth.id}/rides`,
         {
           fromLocation: from_location,
           toLocation: to_location,
@@ -123,7 +123,7 @@ const CreateRide = () => {
       );
       if (response.status === 200) {
         await axios.post(
-          `http://13.201.203.99:8081/email/send-publisher-confirmation?publisherEmail=${encodeURIComponent(
+          `http://13.201.203.99:8095/email/send-publisher-confirmation?publisherEmail=${encodeURIComponent(
             auth.email
           )}`
         );

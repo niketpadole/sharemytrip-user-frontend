@@ -9,7 +9,7 @@ const ViewAllTransaction = () => {
   const [transaction, setTransaction] = useState([]);
   const fetchTransaction = async() => {
     try {
-      const response = await axios.get(`http://13.201.203.99:8089/user/passengers/${auth.id}/transactions`);
+      const response = await axios.get(`http://13.201.203.99:8095/user/passengers/${auth.id}/transactions`);
       if(response.status == 200)
         {
           setTransaction(response.data);

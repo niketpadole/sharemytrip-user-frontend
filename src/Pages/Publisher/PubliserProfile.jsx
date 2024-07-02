@@ -20,7 +20,7 @@ const PublisherProfile = () => {
 
   const fetchProfileData = async (publisherId) => {
     try {
-      const response = await axios.get(`http://13.201.203.99:8089/user/publishers/${publisherId}`);
+      const response = await axios.get(`http://13.201.203.99:8095/user/publishers/${publisherId}`);
       const profile = response.data;
 
       // Updating state with fetched data
@@ -98,7 +98,7 @@ const PublisherProfile = () => {
     };
 
     try {
-      const response = await axios.put(`http://13.201.203.99:8089/user/publishers/${auth.id}`, updatedProfile);
+      const response = await axios.put(`http://13.201.203.99:8095/user/publishers/${auth.id}`, updatedProfile);
       console.log('Profile updated successfully:', response.data);
       if (response.status === 200) {
         toast.success("Profile Updated Successfully");
