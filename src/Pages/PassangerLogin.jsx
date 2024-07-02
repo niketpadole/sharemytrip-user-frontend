@@ -28,7 +28,7 @@ const Login = () => {
       setErrorMessagePassword("Password Field Is Mandatory");
       return;
     }
-    if(password.length != 8){ 
+    if(password.length < 6){ 
         setErrorMessagePassword("Password Must Be 8 digit");
         return;
       }
