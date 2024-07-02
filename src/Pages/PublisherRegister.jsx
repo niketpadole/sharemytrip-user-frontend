@@ -13,7 +13,7 @@ const PublisherRegister = () => {
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [drivingLicence, setDrivingLicence] = useState("");
   const [aadhar, setAadhar] = useState("");
@@ -30,7 +30,6 @@ const PublisherRegister = () => {
   const [errorMessageAadhar, setErrorMessageAadhar] = useState("");
   const [errorMessageModelName, setErrorMessageModelName] = useState("");
   const [errorMessageVeichleNumber, setErrorMessageVehicleNumber] = useState("");
-  
 
   const validate = () => {
     let isValid = true;
@@ -38,38 +37,53 @@ const PublisherRegister = () => {
     if (!firstName) {
       setErrorMessageFirstName("First Name is required");
       isValid = false;
+    } else if (!/^[a-zA-Z]+$/.test(firstName)) {
+      setErrorMessageFirstName('First Name must be a string');
+      isValid = false;
+    } else {
+      setErrorMessageFirstName("");
     }
-    else if (!/^[a-zA-Z]+$/.test(firstName)) {
-     setErrorMessageFirstName('First Name must be a string');
-    }
+
     if (!lastName) {
       setErrorMessageLastName("Last Name is required");
       isValid = false;
-    }
-    else if (!/^[a-zA-Z]+$/.test(lastName)) {
+    } else if (!/^[a-zA-Z]+$/.test(lastName)) {
       setErrorMessageLastName('Last Name must be a string');
-     }
+      isValid = false;
+    } else {
+      setErrorMessageLastName("");
+    }
+
     if (!mobile) {
       setErrorMessageMobile("Mobile Number is Required");
       isValid = false;
     } else if (!/^[789]\d{9}$/.test(mobile)) {
-      setErrorMessageMobile("Mobile Number must be 10 digits Should start with 7|8|9");
+      setErrorMessageMobile("Mobile Number must be 10 digits and start with 7, 8, or 9");
       isValid = false;
+    } else {
+      setErrorMessageMobile("");
     }
+
     if (!email) {
       setErrorMessageEmail("Email is Mandatory");
       isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       setErrorMessageEmail("Email address is invalid");
       isValid = false;
+    } else {
+      setErrorMessageEmail("");
     }
+
     if (!password) {
-      setErrorMessagePassword("Password Fields Is Mandatory");
+      setErrorMessagePassword("Password is Mandatory");
       isValid = false;
     } else if (password.length < 6) {
       setErrorMessagePassword("Password must be at least 6 characters");
       isValid = false;
+    } else {
+      setErrorMessagePassword("");
     }
+
     if (!dateOfBirth) {
       setErrorMessageDOB("DOB is Required");
       isValid = false;
@@ -77,6 +91,9 @@ const PublisherRegister = () => {
       const dob = new Date(dateOfBirth);
       const today = new Date();
       const minDOB = new Date("1947-01-01");
+      const ageDiff = today.getFullYear() - dob.getFullYear();
+      const ageMonth = today.getMonth() - dob.getMonth();
+      const ageDay = today.getDate() - dob.getDate();
 
       if (dob > today) {
         setErrorMessageDOB("Date of Birth cannot be a future date.");
@@ -84,34 +101,49 @@ const PublisherRegister = () => {
       } else if (dob < minDOB) {
         setErrorMessageDOB("Date of Birth cannot be before 1947.");
         isValid = false;
+      } else if (ageDiff < 18 || (ageDiff === 18 && (ageMonth < 0 || (ageMonth === 0 && ageDay < 0)))) {
+        setErrorMessageDOB("You must be at least 18 years old.");
+        isValid = false;
       } else {
         setErrorMessageDOB("");
       }
     }
+
     if (!drivingLicence) {
       setErrorMessageDrivingLicence("Driving Licence is Required");
       isValid = false;
     } else if (drivingLicence.length !== 15) {
-      setErrorMessageDrivingLicence("Driving Licence must be  15 characters");
+      setErrorMessageDrivingLicence("Driving Licence must be 15 characters");
       isValid = false;
+    } else {
+      setErrorMessageDrivingLicence("");
     }
+
     if (!aadhar) {
       setErrorMessageAadhar("Aadhar Card number is required");
       isValid = false;
     } else if (!/^\d{12}$/.test(aadhar)) {
       setErrorMessageAadhar("Aadhar Card number must be 12 digits");
       isValid = false;
+    } else {
+      setErrorMessageAadhar("");
     }
+
     if (!vehicleModelName) {
       setErrorMessageModelName("Model Name is required");
       isValid = false;
+    } else {
+      setErrorMessageModelName("");
     }
+
     if (!vehicleNo) {
       setErrorMessageVehicleNumber("Vehicle Number is required");
       isValid = false;
     } else if (!/^[A-Z]{2}\d{2}[A-Z]{2}\d{4}$/.test(vehicleNo)) {
       setErrorMessageVehicleNumber("Vehicle Number must be in the format MH56BY2345");
       isValid = false;
+    } else {
+      setErrorMessageVehicleNumber("");
     }
 
     return isValid;
@@ -129,13 +161,13 @@ const PublisherRegister = () => {
           email,
           password,
           dateOfBirth,
-          "drivingLicense":drivingLicence,
-          "aadharCard":aadhar,
+          "drivingLicense": drivingLicence,
+          "aadharCard": aadhar,
           miniBio,
           vehicleModelName,
           vehicleNo
         });
-        if(response.status === 200) {
+        if (response.status === 200) {
           toast.success("Publisher Registration Successful", {
             duration: 5000
           });
