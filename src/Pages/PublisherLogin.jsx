@@ -65,7 +65,7 @@ const PublisherLogin = () => {
         toast.error(response.data.message);
       }
     } catch (error) {
-      toast.error(error.message || "An error occurred");
+      toast.error("Invalid Credentials");
       console.log(error);
     }
   };
