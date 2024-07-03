@@ -19,7 +19,7 @@ const MyRides = () => {
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const ridesPerPage = 5;
+  const ridesPerPage = 6;
 
   const onCancel = async () => {
     try {
