@@ -24,7 +24,7 @@ const PaymentSuccess = () => {
       // const response = await axios.put(
       //   `http://13.201.203.99:8090/rides/passenger/${ridesDetail.passengerRideId}/paid`
       // );
-      const response= await axios.put("http://13.201.203.99:8095/user/publishers/update-earnings",{
+      const response= await axios.put("https://api.sharemytrip.xyz/user/publishers/update-earnings",{
         publisherId:ridesDetail.publisherId,
         passengerId:ridesDetail.passengerId,
         publisherName:ridesDetail.publisherName,
