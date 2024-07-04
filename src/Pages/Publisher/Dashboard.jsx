@@ -11,7 +11,7 @@ const Dashboard = () => {
   useEffect(() => {
     // Fetch ride details from the API
     axios
-      .get(`http://13.201.203.99:8095/user/publishers/${auth.id}/rides`)
+      .get(`https://api.sharemytrip.xyz/user/publishers/${auth.id}/rides`)
       .then((response) => {
         setRides(response.data);
       })
