@@ -74,7 +74,7 @@ const BookRide = () => {
     }
     const publisherRideId = rideToBook.publisherRideId;
     try {
-      const response = await axios.post(`http://13.201.203.99:8095/user/passengers/${auth.id}/book`, {
+      const response = await axios.post(`https://api.sharemytrip.xyz/user/passengers/${auth.id}/book`, {
         passengerId: auth.id,
         publisherRideId: publisherRideId,
         noOfPassengers: rideSeats
