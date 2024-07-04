@@ -19,7 +19,7 @@ const ForgotPasswordPublisher = () => {
   const handleSendOtp = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://13.201.203.99:8095/user/publishers/reset-password/${email}`);
+      const response = await axios.post(`https://api.sharemytrip.xyz/user/publishers/reset-password/${email}`);
       if (response.status === 200) {
         toast.success("OTP sent successfully");
         setOtpSent(true);
@@ -35,7 +35,7 @@ const ForgotPasswordPublisher = () => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://13.201.203.99:8095/user/publishers/verify-otp/${email}/${otp}`, null, {
+      const response = await axios.post(`https://api.sharemytrip.xyz/user/publishers/verify-otp/${email}/${otp}`, null, {
         params: {
           otp: otp,
           newPassword: newPassword
@@ -63,7 +63,7 @@ const ForgotPasswordPublisher = () => {
       return;
     }
     try {
-      const response = await axios.put(`http://13.201.203.99:8095/user/publishers/update-password`, null, {
+      const response = await axios.put(`https://api.sharemytrip.xyz/user/publishers/update-password`, null, {
         params: {
           email: email,
           newPassword: newPassword
