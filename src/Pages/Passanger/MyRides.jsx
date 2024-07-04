@@ -24,12 +24,12 @@ const MyRides = () => {
   const onCancel = async () => {
     try {
       const response = await axios.delete(
-        `http://13.201.203.99:8095/user/passengers/cancel/${selectedRide.passengerRideId}`
+        `https://api.sharemytrip.xyz/user/passengers/cancel/${selectedRide.passengerRideId}`
       );
       if (response.status === 204) {
         sendPublisherEmail(selectedRide.publisherEmail);
         await axios.post(
-          `http://13.201.203.99:8095/email/send-passenger-canceled-notification?passengerEmail=${encodeURIComponent(
+          `https://api.sharemytrip.xyz/email/send-passenger-canceled-notification?passengerEmail=${encodeURIComponent(
             auth.email
           )}`
         );
@@ -75,7 +75,7 @@ const MyRides = () => {
 
     try {
       const response = await axios.post(
-        "http://13.201.203.99:8095/user/passengers/pay",
+        "https://api.sharemytrip.xyz/user/passengers/pay",
         payload
       );
       if (response.status === 200) {
@@ -96,7 +96,7 @@ const MyRides = () => {
   const fetchRides = async () => {
     try {
       const response = await axios.get(
-        `http://13.201.203.99:8095/user/passengers/${auth.id}/rides`
+        `https://api.sharemytrip.xyz/user/passengers/${auth.id}/rides`
       );
       console.log("Response from API:", response.data);
       setRides(response.data);
@@ -142,7 +142,7 @@ const MyRides = () => {
 
   const sendPublisherEmail = async(publisherEmail) =>{
     try {
-      axios.post(`http://13.201.203.99:8095/email/send-pasenger-canceled-notification-publisher?publisherEmail=${encodeURIComponent(
+      axios.post(`https://api.sharemytrip.xyz/email/send-pasenger-canceled-notification-publisher?publisherEmail=${encodeURIComponent(
         publisherEmail)}`)
     } catch (error) {
       console.log(error);
