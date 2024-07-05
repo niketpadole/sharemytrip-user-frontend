@@ -44,7 +44,7 @@ const BookRide = () => {
       if (validate()) {
         const formattedDate = new Date(date_of_journey).toISOString().split('T')[0];
         const response = await axios.get(
-          `http://13.201.203.99:8095/user/passengers/rides/filter`,
+          `https://api.sharemytrip.xyz/user/passengers/rides/filter`,
           {
             params: {
               fromLocation,
@@ -80,7 +80,7 @@ const BookRide = () => {
         noOfPassengers: rideSeats
       });
       if (response.status === 200) {
-        await axios.post(`http://13.201.203.99:8095/email/send-passenger-booked-confirmation?passengerEmail=${encodeURIComponent(auth.email)}`)
+        await axios.post(`https://api.sharemytrip.xyz/email/send-passenger-booked-confirmation?passengerEmail=${encodeURIComponent(auth.email)}`)
         toast.success("Ride Booked Successfully");
         setShowModal(false);
         setShowConfirmationModal(true);
