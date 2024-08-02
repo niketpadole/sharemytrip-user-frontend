@@ -28,7 +28,7 @@ const ForgotPassword = () => {
       }
     } catch (error) {
       console.error("Error sending OTP", error);
-      toast.error("Error sending OTP");
+      toast.error("Email Not Registered");
     }
   };
 
@@ -44,7 +44,7 @@ const ForgotPassword = () => {
       }
     } catch (error) {
       console.error("Error verifying OTP", error);
-      toast.error("Email Not Registered");
+      toast.error("Error in verifying OTP");
     }
   };
 
