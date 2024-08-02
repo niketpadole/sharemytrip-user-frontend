@@ -44,14 +44,14 @@ const PassangerRegister = () => {
     if (!mobile) {
       setErrorMessageMobile("Mobile number is required");
       isValid = false;
-    } else if (!/^[789]\d{9}$/.test(mobile)) {
+    } else if (!/^[789]\d{9}$/.test(mobile)) {    
       setErrorMessageMobile("Mobile number should be 10 digits and start with 7, 8, or 9");
       isValid = false;
     }
     if (!email) {
       setErrorMessageEmail("Email is required");
       isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
+    } else if (!/\S+@\S+\.\S/.test(email)) { 
       setErrorMessageEmail("Email address is invalid");
       isValid = false;
     }
@@ -63,17 +63,27 @@ const PassangerRegister = () => {
       isValid = false;
     }
     if (!dateOfBirth) {
-      setErrorMessageDOB("Date of Birth is required");
+      setErrorMessageDOB("DOB is Required");
       isValid = false;
     } else {
-      const today = new Date();
       const dob = new Date(dateOfBirth);
+      const today = new Date();
+      const minDOB = new Date("1947-01-01");
+      const ageDiff = today.getFullYear() - dob.getFullYear();
+      const ageMonth = today.getMonth() - dob.getMonth();
+      const ageDay = today.getDate() - dob.getDate();
+
       if (dob > today) {
-        setErrorMessageDOB("Date of Birth cannot be in the future");
+        setErrorMessageDOB("Date of Birth cannot be a future date.");
         isValid = false;
-      } else if (dob < new Date("1947-01-01")) {
-        setErrorMessageDOB("Date of Birth cannot be before 1947");
+      } else if (dob < minDOB) {
+        setErrorMessageDOB("Date of Birth cannot be before 1947.");
         isValid = false;
+      } else if (ageDiff < 15 || (ageDiff === 15 && (ageMonth < 0 || (ageMonth === 0 && ageDay < 0)))) {
+        setErrorMessageDOB("You must be at least 15 years old.");
+        isValid = false;
+      } else {
+        setErrorMessageDOB("");
       }
     }
     if (!aadhar) {
@@ -105,7 +115,7 @@ const PassangerRegister = () => {
             miniBio,
           }
         );
-        if (response.status === 200) {
+        if (response.status === 201) {
           toast.success("Passenger Registration Successful", {
             duration: 3000,
           });
@@ -118,7 +128,13 @@ const PassangerRegister = () => {
       }
     } catch (error) {
       console.log(error);
+      if(error.response.status===409){
+        // toast.error("Email or Aadhaar already registered");
+        toast.error(error.response.data);
+      }
+      else{
       toast.error("Server Error");
+      }
     }
   };
 
@@ -140,7 +156,7 @@ const PassangerRegister = () => {
             <form onSubmit={register} className="text-left">
               <div className="mb-5">
                 <label htmlFor="firstName" className="block mb-2 text-[#333]">
-                  First Name
+                  First Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -160,7 +176,7 @@ const PassangerRegister = () => {
               </div>
               <div className="mb-5">
                 <label htmlFor="lastName" className="block mb-2 text-[#333]">
-                  Last Name
+                  Last Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -178,7 +194,7 @@ const PassangerRegister = () => {
               </div>
               <div className="mb-5">
                 <label htmlFor="mobile" className="block mb-2 text-[#333]">
-                  Mobile
+                  Mobile <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="tel"
@@ -196,7 +212,7 @@ const PassangerRegister = () => {
               </div>
               <div className="mb-5">
                 <label htmlFor="email" className="block mb-2 text-[#333]">
-                  Email
+                  Email <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="email"
@@ -214,7 +230,7 @@ const PassangerRegister = () => {
               </div>
               <div className="mb-5 text-left relative">
                 <label htmlFor="password" className="block mb-2 text-[#333]">
-                  Password
+                  Password <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -240,7 +256,7 @@ const PassangerRegister = () => {
               </div>
               <div className="mb-5">
                 <label htmlFor="dob" className="block mb-2 text-[#333]">
-                  Date of Birth
+                  Date of Birth <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="date"
@@ -259,7 +275,7 @@ const PassangerRegister = () => {
               </div>
               <div className="mb-5">
                 <label htmlFor="aadhaar" className="block mb-2 text-[#333]">
-                  Aadhaar Card
+                  Aadhaar Card <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
