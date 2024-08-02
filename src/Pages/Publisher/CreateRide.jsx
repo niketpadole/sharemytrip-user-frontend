@@ -26,8 +26,12 @@ const CreateRide = () => {
     let tempErrors = {};
     if (!from_location) tempErrors.from_location = "From Location is required";
     if (!to_location) tempErrors.to_location = "To Location is required";
-    if (!available_seats)
+    if (!available_seats){
       tempErrors.available_seats = "Available Seats is required";
+    }
+    else if(!(available_seats>0 && available_seats < 8)){
+      tempErrors.available_seats="Available seats must be in between 1 to 7"
+    }
     if (!date_of_journey)
       tempErrors.date_of_journey = "Date of Journey is required";
     if (!time_of_journey)
