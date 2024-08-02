@@ -121,20 +121,18 @@ const PassangerRegister = () => {
           });
           navigate("/log-in/passanger");
         } else {
-          toast.error("Registration Failed");
+          toast.error("Registration Failed", {
+            duration: 3000
+          });
         }
       } else {
-        console.log("Validation Failed");
+        toast.error("Validation Failed");
       }
     } catch (error) {
       console.log(error);
-      if(error.response.status===409){
-        // toast.error("Email or Aadhaar already registered");
-        toast.error(error.response.data);
-      }
-      else{
-      toast.error("Server Error");
-      }
+      toast.error(error.response.data, {
+        duration: 3000
+      });
     }
   };
 
