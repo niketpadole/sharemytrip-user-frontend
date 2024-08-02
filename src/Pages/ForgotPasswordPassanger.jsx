@@ -28,7 +28,7 @@ const ForgotPassword = () => {
       }
     } catch (error) {
       console.error("Error sending OTP", error);
-      toast.error("Error sending OTP");
+      toast.error(error.response.data);
     }
   };
 
@@ -44,7 +44,7 @@ const ForgotPassword = () => {
       }
     } catch (error) {
       console.error("Error verifying OTP", error);
-      toast.error(error.response.data);
+      toast.error("Error verifying OTP");
     }
   };
 
