@@ -97,6 +97,60 @@ const PassangerRegister = () => {
     return isValid;
   };
 
+  // const register = async (e) => {
+  //   try {
+  //     e.preventDefault();
+  //     const validation = validate();
+  //     if (validation) {
+  //       const response = await axios.post(
+  //         "https://api.sharemytrip.xyz/user/passengers/register",
+  //         {
+  //           firstName,
+  //           lastName,
+  //           mobile,
+  //           email,
+  //           password,
+  //           dateOfBirth,
+  //           "aadharCard": aadhar,
+  //           miniBio,
+  //         }
+  //       );
+  // //       if (response.status === 201) {
+  // //         toast.success("Passenger Registration Successful", {
+  // //           duration: 3000,
+  // //         });
+  // //         navigate("/log-in/passanger");
+  // //       } else {
+  // //         toast.error(error.response.data, {
+  // //           duration: 3000
+  // //         });
+  // //       }
+  // //     } else {
+  // //       toast.error("Validation Failed");
+  // //     }
+  // //   } catch (error) {
+  // //     console.log(error);
+  // //     toast.error(error.response.data, {
+  // //       duration: 3000
+  // //     });
+  // //   }
+  // // };
+  //       if (response.status === 201) {
+  //         toast.success("Passenger Registration Successful", {
+  //           duration: 3000,
+  //         });
+  //         navigate("/log-in/passanger");
+  //       } else {
+  //         toast.error("Registration Failed");
+  //       }
+  //     } else {
+  //       console.log("Validation Failed");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error(error.response.data);
+  //   }
+  // };
   const register = async (e) => {
     try {
       e.preventDefault();
@@ -115,26 +169,6 @@ const PassangerRegister = () => {
             miniBio,
           }
         );
-  //       if (response.status === 201) {
-  //         toast.success("Passenger Registration Successful", {
-  //           duration: 3000,
-  //         });
-  //         navigate("/log-in/passanger");
-  //       } else {
-  //         toast.error(error.response.data, {
-  //           duration: 3000
-  //         });
-  //       }
-  //     } else {
-  //       toast.error("Validation Failed");
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error(error.response.data, {
-  //       duration: 3000
-  //     });
-  //   }
-  // };
         if (response.status === 201) {
           toast.success("Passenger Registration Successful", {
             duration: 3000,
@@ -148,7 +182,13 @@ const PassangerRegister = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data);
+      if(error.response.status===409){
+        // toast.error("Email or Aadhaar already registered");
+        toast.error(error.response.data);
+      }
+      else{
+      toast.error("Server Error");
+      }
     }
   };
 
