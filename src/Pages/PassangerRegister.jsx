@@ -115,24 +115,40 @@ const PassangerRegister = () => {
             miniBio,
           }
         );
+  //       if (response.status === 201) {
+  //         toast.success("Passenger Registration Successful", {
+  //           duration: 3000,
+  //         });
+  //         navigate("/log-in/passanger");
+  //       } else {
+  //         toast.error(error.response.data, {
+  //           duration: 3000
+  //         });
+  //       }
+  //     } else {
+  //       toast.error("Validation Failed");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error(error.response.data, {
+  //       duration: 3000
+  //     });
+  //   }
+  // };
         if (response.status === 201) {
           toast.success("Passenger Registration Successful", {
             duration: 3000,
           });
           navigate("/log-in/passanger");
         } else {
-          toast.error(error.response.data, {
-            duration: 3000
-          });
+          toast.error("Registration Failed");
         }
       } else {
-        toast.error("Validation Failed");
+        console.log("Validation Failed");
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data, {
-        duration: 3000
-      });
+      toast.error(error.response.data);
     }
   };
 
