@@ -28,7 +28,7 @@ const ForgotPasswordPublisher = () => {
       }
     } catch (error) {
       console.error("Error sending OTP", error);
-      toast.error("Error sending OTP");
+      toast.error(error.response.data);
     }
   };
 
