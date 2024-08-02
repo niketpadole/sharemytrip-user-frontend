@@ -182,7 +182,7 @@ const PublisherRegister = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Internal Error", {
+      toast.error(error.response.data, {
         duration: 3000
       });
     }
@@ -208,7 +208,7 @@ const PublisherRegister = () => {
             <form onSubmit={register} className="text-left">
               <div className="mb-5">
                 <label htmlFor="firstName" className="block mb-2 text-[#333]">
-                  First Name
+                  First Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -228,7 +228,7 @@ const PublisherRegister = () => {
               </div>
               <div className="mb-5">
                 <label htmlFor="lastName" className="block mb-2 text-[#333]">
-                  Last Name
+                  Last Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -246,7 +246,7 @@ const PublisherRegister = () => {
               </div>
               <div className="mb-5">
                 <label htmlFor="mobile" className="block mb-2 text-[#333]">
-                  Mobile
+                  Mobile <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="tel"
@@ -264,7 +264,7 @@ const PublisherRegister = () => {
               </div>
               <div className="mb-5">
                 <label htmlFor="email" className="block mb-2 text-[#333]">
-                  Email
+                  Email <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="email"
@@ -282,7 +282,7 @@ const PublisherRegister = () => {
               </div>
               <div className="mb-5 text-left relative">
                 <label htmlFor="password" className="block mb-2 text-[#333]">
-                  Password
+                  Password <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -308,7 +308,7 @@ const PublisherRegister = () => {
               </div>
               <div className="mb-5">
                 <label htmlFor="dob" className="block mb-2 text-[#333]">
-                  Date of Birth
+                  Date of Birth <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="date"
@@ -330,7 +330,7 @@ const PublisherRegister = () => {
                   htmlFor="drivingLicence"
                   className="block mb-2 text-[#333]"
                 >
-                  Driving License
+                  Driving License <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -350,7 +350,7 @@ const PublisherRegister = () => {
               </div>
               <div className="mb-5">
                 <label htmlFor="aadhaar" className="block mb-2 text-[#333]">
-                  Aadhar Card
+                  Aadhar Card <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -381,7 +381,7 @@ const PublisherRegister = () => {
               </div>
               <div className="mb-5">
                 <label htmlFor="modelName" className="block mb-2 text-[#333]">
-                  Model Name
+                  Model Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -404,7 +404,7 @@ const PublisherRegister = () => {
                   htmlFor="veichleNumber"
                   className="block mb-2 text-[#333]"
                 >
-                  Vehicle Number
+                  Vehicle Number <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
