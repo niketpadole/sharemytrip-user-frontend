@@ -94,19 +94,43 @@ const MyRides = () => {
   };
 
   const fetchRides = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(
         `https://api.sharemytrip.xyz/user/passengers/${auth.id}/rides`
       );
-      console.log("Response from API:", response.data);
-      setRides(response.data);
-      setFilteredRides(response.data);
+      const ridesData = response.data;
+      
+      // Fetch publisher details for each ride
+      const publisherRequests = ridesData.map((ride) =>
+        axios.get(`https://api.sharemytrip.xyz/user/publishers/${ride.publisherId}`)
+      );
+      
+      const publisherResponses = await Promise.all(publisherRequests);
+  
+      const updatedRides = ridesData.map((ride, index) => {
+        const publisher = publisherResponses[index].data;
+        return {
+          ...ride,
+          vehicleNo: publisher.vehicleNo,
+          vehicleModelName: publisher.vehicleModelName,
+        };
+      });
+      
+      setRides(updatedRides);
+      setFilteredRides(updatedRides);
     } catch (error) {
       console.error("Error fetching rides:", error);
+      toast.error("Failed to fetch rides");
     } finally {
       setLoading(false);
     }
   };
+  
+  useEffect(() => {
+    fetchRides();
+  }, [auth.id]);
+  
 
   useEffect(() => {
     fetchRides();
@@ -177,8 +201,11 @@ const MyRides = () => {
               {currentRides.map((ride, index) => (
                 <div key={index} className="bg-white rounded-lg shadow-md p-6">
                   <h3 className="text-xl font-bold text-red-600 mb-2">
-                    {ride.publisherName}
+                    Ride Details
                   </h3>
+                  <p className="text-gray-600">
+                    <strong>Publisher Name: </strong> {ride.publisherName}
+                  </p>
                   <p className="text-gray-600">
                     <strong>Mobile:</strong> {ride.publisherMobile}
                   </p>
@@ -206,7 +233,14 @@ const MyRides = () => {
                   <p className="text-gray-600">
                     <strong>Journey Hours:</strong> {ride.journeyHours} hrs
                   </p>
+                  
                   <p className="text-gray-600">
+                  <strong>Vehicle Model Name:</strong> {ride.vehicleModelName || 'N/A'}
+                  </p>
+                  <p className="text-gray-600">
+                  <strong>Vehicle Number:</strong> {ride.vehicleNo || 'N/A'}
+                  </p>
+                    <p className="text-gray-600">
                     <strong>Ride Status:</strong> {ride.publisherStatus}
                   </p>
                   <p className="text-gray-600">
