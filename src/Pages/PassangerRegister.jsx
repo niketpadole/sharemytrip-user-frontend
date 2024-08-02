@@ -182,10 +182,8 @@ const PassangerRegister = () => {
       }
     } catch (error) {
       console.log(error);
-      if(error.response.status===409){
         // toast.error("Email or Aadhaar already registered");
         toast.error(error.response.data);
-      }
       else{
       toast.error("Server Error");
       }
