@@ -121,7 +121,7 @@ const PassangerRegister = () => {
           });
           navigate("/log-in/passanger");
         } else {
-          toast.error("Registration Failed", {
+          toast.error(error.response.data, {
             duration: 3000
           });
         }
