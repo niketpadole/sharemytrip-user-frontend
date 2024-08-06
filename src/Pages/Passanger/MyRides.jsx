@@ -247,10 +247,6 @@ const MyRides = () => {
                     <strong>Payment Status:</strong>{" "}
                     {ride.passengerPaymentStatus}
                   </p>
-                  <p className="text-gray-600">
-                    <strong>Passenger Status: </strong>
-                    {ride.passengerStatus}
-                  </p>
 
                   {ride.publisherStatus === "NOT_COMPLETED"  && (
                     <button
