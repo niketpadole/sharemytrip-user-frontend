@@ -100,6 +100,7 @@ const MyRides = () => {
       const response = await axios.get(
         `https://api.sharemytrip.xyz/user/passengers/${auth.id}/rides`
       );
+      console.log(response.data);
       const ridesData = response.data;
       
       // Fetch publisher details for each ride
