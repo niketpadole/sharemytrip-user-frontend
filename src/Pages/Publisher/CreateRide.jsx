@@ -26,16 +26,13 @@ const CreateRide = () => {
     let tempErrors = {};
     if (!from_location) tempErrors.from_location = "From Location is required";
     if (!to_location) tempErrors.to_location = "To Location is required";
-    if (!available_seats){
+    if (!available_seats) {
       tempErrors.available_seats = "Available Seats is required";
+    } else if (!(available_seats > 0 && available_seats < 8)) {
+      tempErrors.available_seats = "Available seats must be in between 1 to 7";
     }
-    else if(!(available_seats>0 && available_seats < 8)){
-      tempErrors.available_seats="Available seats must be in between 1 to 7"
-    }
-    if (!date_of_journey)
-      tempErrors.date_of_journey = "Date of Journey is required";
-    if (!time_of_journey)
-      tempErrors.time_of_journey = "Time of Journey is required";
+    if (!date_of_journey) tempErrors.date_of_journey = "Date of Journey is required";
+    if (!time_of_journey) tempErrors.time_of_journey = "Time of Journey is required";
     if (!fare_per_seat) tempErrors.fare_per_seats = "Fare Per Seat is required";
     if (
       parseFloat(fare_per_seat) < parseFloat(initialFare) - 200 ||
@@ -80,7 +77,7 @@ const CreateRide = () => {
                   toLocation: to_location,
                 }
               );
-              if (JourneyResponse.status == 200) {
+              if (JourneyResponse.status === 200) {
                 setJourneyHour(JourneyResponse.data);
               }
             }
@@ -92,12 +89,29 @@ const CreateRide = () => {
     };
 
     fetchDistanceAndFare();
-    // Set minimum time to the current time
+  }, [from_location, to_location]);
+
+  useEffect(() => {
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, "0");
     const minutes = now.getMinutes().toString().padStart(2, "0");
     setMinTime(`${hours}:${minutes}`);
-  }, [from_location, to_location]);
+  }, []);
+
+  useEffect(() => {
+    const updateMinTime = () => {
+      const now = new Date();
+      const selectedDate = new Date(date_of_journey);
+      if (selectedDate.toDateString() === now.toDateString()) {
+        const hours = now.getHours().toString().padStart(2, "0");
+        const minutes = now.getMinutes().toString().padStart(2, "0");
+        setMinTime(`${hours}:${minutes}`);
+      } else {
+        setMinTime("00:00");
+      }
+    };
+    updateMinTime();
+  }, [date_of_journey]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -108,9 +122,7 @@ const CreateRide = () => {
 
   const handleConfirm = async () => {
     try {
-      const formattedTime = new Date(`1970-01-01T${time_of_journey}:00`)
-        .toTimeString()
-        .split(" ")[0];
+      const formattedTime = new Date(`1970-01-01T${time_of_journey}:00`).toISOString().split("T")[1].split(".")[0];
       const response = await axios.post(
         `https://api.sharemytrip.xyz/user/publishers/${auth.id}/rides`,
         {
@@ -221,7 +233,6 @@ const CreateRide = () => {
                 className="w-full p-2 border border-gray-300 rounded-md"
                 readOnly
                 value={journey_hours}
-                onChange={(e) => setJourneyHour(e.target.value)}
               />
             </div>
             <div className="mb-4">
@@ -240,7 +251,9 @@ const CreateRide = () => {
                 onChange={(e) => setAvailableSeats(e.target.value)}
               />
               {errors.available_seats && (
-                <p className="text-red-500 text-sm">{errors.available_seats}</p>
+                <p className="text-red-500 text-sm">
+                  {errors.available_seats}
+                </p>
               )}
             </div>
             <div className="mb-4">
@@ -260,7 +273,9 @@ const CreateRide = () => {
                 onChange={(e) => setDateOfJourney(e.target.value)}
               />
               {errors.date_of_journey && (
-                <p className="text-red-500 text-sm">{errors.date_of_journey}</p>
+                <p className="text-red-500 text-sm">
+                  {errors.date_of_journey}
+                </p>
               )}
             </div>
             <div className="mb-4">
@@ -276,25 +291,26 @@ const CreateRide = () => {
                 name="time_of_journey"
                 className="w-full p-2 border border-gray-300 rounded-md"
                 value={time_of_journey}
-                min={minTime}
                 onChange={(e) => setTimeOfJourney(e.target.value)}
+                min={minTime}
               />
               {errors.time_of_journey && (
-                <p className="text-red-500 text-sm">{errors.time_of_journey}</p>
+                <p className="text-red-500 text-sm">
+                  {errors.time_of_journey}
+                </p>
               )}
             </div>
             <div className="mb-4">
               <label
-                htmlFor="fare_per_seats"
+                htmlFor="fare_per_seat"
                 className="block text-gray-700 mb-2"
               >
-                Fare Per Seat (in Rupees)
+                Fare Per Seat
               </label>
               <input
                 type="number"
-                step="1"
-                id="fare_per_seats"
-                name="fare_per_seats"
+                id="fare_per_seat"
+                name="fare_per_seat"
                 className="w-full p-2 border border-gray-300 rounded-md"
                 value={fare_per_seat}
                 min={parseFloat(initialFare) > 200 ? parseFloat(initialFare) - 200 : 1} // Use initialFare for validation
@@ -305,18 +321,17 @@ const CreateRide = () => {
                 <p className="text-red-500 text-sm">{errors.fare_per_seats}</p>
               )}
             </div>
-            <div className="mb-6">
-              <label htmlFor="about_ride" className="block text-gray-700 mb-2">
-                Anything About Your Ride
+            <div className="mb-4">
+              <label htmlFor="description" className="block text-gray-700 mb-2">
+                About Ride
               </label>
               <textarea
-                id="about_ride"
-                name="about_ride"
-                rows="4"
+                id="description"
+                name="description"
                 className="w-full p-2 border border-gray-300 rounded-md"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-              ></textarea>
+              />
             </div>
             <button
               type="submit"
@@ -330,71 +345,71 @@ const CreateRide = () => {
 
       {showModal && (
         <div
-          id="popup-modal"
-          tabIndex="-1"
-          className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-black bg-opacity-50"
-        >
-          <div className="relative p-4 w-full max-w-md max-h-full">
-            <div className="relative bg-white rounded-lg shadow">
+        id="popup-modal"
+        tabIndex="-1"
+        className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-black bg-opacity-50"
+      >
+        <div className="relative p-4 w-full max-w-md max-h-full">
+          <div className="relative bg-white rounded-lg shadow">
+            <button
+              type="button"
+              className="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+              onClick={closeModal}
+            >
+              <svg
+                className="w-3 h-3"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 14"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
+              </svg>
+              <span className="sr-only">Close modal</span>
+            </button>
+            <div className="p-4 md:p-5 text-center">
+              <svg
+                className="mx-auto mb-4 text-gray-400 w-12 h-12"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                />
+              </svg>
+              <h3 className="mb-5 text-lg font-normal text-gray-500">
+                Are you sure you want to publish this ride?
+              </h3>
               <button
                 type="button"
-                className="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
+                onClick={handleConfirm}
+              >
+                Yes, I'm sure
+              </button>
+              <button
+                type="button"
+                className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
                 onClick={closeModal}
               >
-                <svg
-                  className="w-3 h-3"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 14 14"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                  />
-                </svg>
-                <span className="sr-only">Close modal</span>
+                No, cancel
               </button>
-              <div className="p-4 md:p-5 text-center">
-                <svg
-                  className="mx-auto mb-4 text-gray-400 w-12 h-12"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                  />
-                </svg>
-                <h3 className="mb-5 text-lg font-normal text-gray-500">
-                  Are you sure you want to publish this ride?
-                </h3>
-                <button
-                  type="button"
-                  className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
-                  onClick={handleConfirm}
-                >
-                  Yes, I'm sure
-                </button>
-                <button
-                  type="button"
-                  className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
-                  onClick={closeModal}
-                >
-                  No, cancel
-                </button>
-              </div>
             </div>
           </div>
         </div>
+      </div>
       )}
     </Layout>
   );
