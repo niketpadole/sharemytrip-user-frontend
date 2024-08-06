@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/auth";
 import { useNavigate } from "react-router-dom";
+
 //Creating use states
 const BookRide = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const BookRide = () => {
   const [showModal, setShowModal] = useState(false);
   const [rideToBook, setRideToBook] = useState(null);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [sortOption, setSortOption] = useState("fareAsc");
   //checking from & to location
   const validate = () => {
     let isValid = true;
@@ -149,6 +151,39 @@ const BookRide = () => {
       [rideId]: (prevSeats[rideId] || 1) > 1 ? (prevSeats[rideId] || 1) - 1 : 1,
     }));
   };
+  const parseTime = (timeString) => {
+    const [hours, minutes] = timeString.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0);
+    return date;
+  };
+  const handleSort = (option) => {
+    let sortedRides;
+    switch (option) {
+      case "fareAsc":
+        sortedRides = [...publishedRide].sort((a, b) => a.farePerSeat - b.farePerSeat);
+        break;
+      case "fareDesc":
+        sortedRides = [...publishedRide].sort((a, b) => b.farePerSeat - a.farePerSeat);
+        break;
+      case "seatsAsc":
+        sortedRides = [...publishedRide].sort((a, b) => a.availableSeats - b.availableSeats);
+        break;
+      case "seatsDesc":
+        sortedRides = [...publishedRide].sort((a, b) => b.availableSeats - a.availableSeats);
+        break;
+        case "departureAsc":
+          sortedRides = [...publishedRide].sort((a, b) => parseTime(a.timeOfJourney) - parseTime(b.timeOfJourney));
+          break;
+        case "departureDesc":
+          sortedRides = [...publishedRide].sort((a, b) => parseTime(b.timeOfJourney) - parseTime(a.timeOfJourney));
+          break;
+      default:
+        sortedRides = [...publishedRide];
+    }
+    setPublishedRide(sortedRides);
+    setSortOption(option);
+  };
 
   return (
     <Layout>
@@ -227,7 +262,22 @@ const BookRide = () => {
             >
               Search Rides
             </button>
+            
           </form>
+          <div className="flex justify-end mb-6">
+        <select
+          className="bg-white-600  px-4 py-2 rounded-md"
+          value={sortOption}
+          onChange={(e) => handleSort(e.target.value)}
+        >
+          <option value="fareAsc">Sort by Fare (Asc)</option>
+          <option value="fareDesc">Sort by Fare (Desc)</option>
+          <option value="seatsAsc">Sort by Available Seats (Asc)</option>
+          <option value="seatsDesc">Sort by Available Seats (Desc)</option>
+          <option value="departureAsc">Sort by Departure Time (Asc)</option>
+          <option value="departureDesc">Sort by Departure Time (Desc)</option>
+        </select>
+      </div>
           {publishedRide.length === 0 ? (
             <h2 className="text-2xl text-red-600 mb-6">No Rides Available</h2>
           ) : (
@@ -260,7 +310,7 @@ const BookRide = () => {
                     <strong>Date:</strong> {ride.dateOfJourney}
                   </p>
                   <p className="text-gray-600 mb-1">
-                    <strong>Time:</strong> {ride.timeOfJourney}
+                    <strong>Departure Time:</strong> {ride.timeOfJourney}
                   </p>
                   <p className="text-gray-600 mb-1">
                     <strong>Fare per Seat:</strong> Rs.{ride.farePerSeat}
@@ -271,9 +321,9 @@ const BookRide = () => {
                   <p className="text-gray-600 mb-1">
                     <strong>Vehichle Model Name: </strong>{ride.vehicleModelName}
                   </p>
-                  {/* <p className="text-gray-600 mb-1">
-                    <strong>Vehicle Number:</strong>{ride.vehicleNo}
-                  </p> */}
+                  <p className="text-gray-600 mb-1">
+                    <strong>Journey Hours: </strong>{ride.journeyHours}
+                  </p>
 
                   <div className="flex items-center mt-2">
                     <button
