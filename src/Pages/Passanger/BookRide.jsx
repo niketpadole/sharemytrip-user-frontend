@@ -62,7 +62,8 @@ const BookRide = () => {
             (ride) =>
               ride.availableSeats > 0 &&
               ride.status !== "ONGOING" &&
-              ride.status !== "COMPLETED"
+              ride.status !== "COMPLETED"&&
+              ride.status !=="CANCELLED"
           );
           const publisherRequests = availableRides.map((ride) =>
             axios.get(`https://api.sharemytrip.xyz/user/publishers/${ride.publisherId}`)
