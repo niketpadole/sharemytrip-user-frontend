@@ -276,6 +276,11 @@ const MyRides = () => {
                         Payment Successful
                       </p>
                     )}
+                  {ride.publisherStatus === "CANCELLED" && (
+                      <p className="text-red-600 font-bold mt-4">
+                        Cancelled
+                      </p>
+                    )}
                      
                 </div>
               ))}
