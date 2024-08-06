@@ -122,7 +122,7 @@ const PassangerRegister = () => {
           });
           navigate("/log-in/passanger");
         } else {
-          toast.error("Registration Failed");
+          toast.error(response.data);
         }
       } else {
         console.log("Validation Failed");
