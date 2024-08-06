@@ -23,7 +23,7 @@ const MyRides = () => {
 
   const onCancel = async () => {
     try {
-      const response = await axios.put(
+      const response = await axios.delete(
         `https://api.sharemytrip.xyz/user/passengers/cancel/${selectedRide.passengerRideId}`
       );
       if (response.status === 204) {
@@ -252,7 +252,7 @@ const MyRides = () => {
                     {ride.passengerStatus}
                   </p>
 
-                  {ride.publisherStatus === "NOT_COMPLETED" && ride.passengerStatus==="NOT_COMPLETED" && (
+                  {ride.publisherStatus === "NOT_COMPLETED"  (
                     <button
                       className="mt-4 text-red-500 hover:text-red-700"
                       onClick={() => {
@@ -280,11 +280,7 @@ const MyRides = () => {
                         Payment Successful
                       </p>
                     )}
-                     {ride.passengerStatus === "CANCELLED" && ride.publisherStatus ==="NOT_COMPLETED" &&
-                      (<p className="text-red-600 font-bold mt-4">
-                        Cancelled
-                      </p>)
-                    }
+                     
                 </div>
               ))}
             </div>
