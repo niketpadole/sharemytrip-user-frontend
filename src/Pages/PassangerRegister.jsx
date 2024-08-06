@@ -115,7 +115,7 @@ const PassangerRegister = () => {
             miniBio,
           }
         );
-        if (response.status === 200) {
+    if (response.status === 201) {
           toast.success("Passenger Registration Successful", {
             duration: 3000,
           });
@@ -128,10 +128,14 @@ const PassangerRegister = () => {
       }
     } catch (error) {
       console.log(error);
+      if(error.response.status===409){
         // toast.error("Email or Aadhaar already registered");
         toast.error(error.response.data);
-      
-    }
+      }
+      else{
+      toast.error("Server Error");
+      }
+  }
   };
 
   return (
