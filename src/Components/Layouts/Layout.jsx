@@ -3,15 +3,15 @@ import Header from './Header'
 import Footer from './Footer'
 import { Toaster } from 'react-hot-toast'
 
-const Layout = ({children}) => {
+const Layout = ({ children }) => {
   return (
-    <>
-      <Header/>
-        {children}
-        <Toaster/>
-      <Footer/>
-    </>
-  )
-}
+    <div className="flex flex-col h-screen">
+      <Header />
+      <main className="flex-grow">{children}</main>
+      <Toaster />
+      <Footer />
+    </div>
+  );
+};
 
 export default Layout
