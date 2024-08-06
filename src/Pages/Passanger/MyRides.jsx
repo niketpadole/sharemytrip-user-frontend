@@ -252,7 +252,7 @@ const MyRides = () => {
                     {ride.passengerStatus}
                   </p>
 
-                  {ride.publisherStatus === "NOT_COMPLETED"  (
+                  {ride.publisherStatus === "NOT_COMPLETED"  && (
                     <button
                       className="mt-4 text-red-500 hover:text-red-700"
                       onClick={() => {
