@@ -97,7 +97,6 @@ const PassangerRegister = () => {
     return isValid;
   };
 
-  
   const register = async (e) => {
     try {
       e.preventDefault();
@@ -121,19 +120,17 @@ const PassangerRegister = () => {
             duration: 3000,
           });
           navigate("/log-in/passanger");
-        } 
+        } else {
+          toast.error("Registration Failed");
+        }
       } else {
         console.log("Validation Failed");
       }
     } catch (error) {
       console.log(error);
-      if(error.response.status===409){
         // toast.error("Email or Aadhaar already registered");
         toast.error(error.response.data);
-      }
-      else{
-      toast.error("Server Error");
-      }
+      
     }
   };
 
