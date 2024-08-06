@@ -278,28 +278,28 @@ const Header = () => {
                 </NavLink>
               </li>
               <li>
-                <NavLink
-                  to="/about"
+                <HashLink
+                  to="#about"
                   className="block px-4 py-2 text-white hover:text-[#6f61ff] active:text-[#6f61ff]"
                 >
                   About
-                </NavLink>
+                </HashLink>
               </li>
               <li>
-                <NavLink
-                  to="/services"
+                <HashLink
+                  to="#services"
                   className="block px-4 py-2 text-white hover:text-[#6f61ff] active:text-[#6f61ff]"
                 >
                   Services
-                </NavLink>
+                </HashLink>
               </li>
               <li>
-                <NavLink
-                  to="/testimonials"
+                <HashLink
+                  to="#testimonials"
                   className="block px-4 py-2 text-white hover:text-[#6f61ff] active:text-[#6f61ff]"
                 >
                   Testimonials
-                </NavLink>
+                </HashLink>
               </li>
               {auth.userType === "PASSENGER" && (
                 <li>
