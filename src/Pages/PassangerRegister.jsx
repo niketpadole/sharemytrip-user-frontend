@@ -121,9 +121,7 @@ const PassangerRegister = () => {
             duration: 3000,
           });
           navigate("/log-in/passanger");
-        } else if(response.status===409){
-          toast.error(response.data);
-        }
+        } 
       } else {
         console.log("Validation Failed");
       }
