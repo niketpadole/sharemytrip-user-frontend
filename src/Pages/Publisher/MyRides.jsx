@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Layout from "../../Components/Layouts/Layout";
 import { useAuth } from "../../context/auth";
-
+//Creating Usestates
 const MyRides = () => {
   const [auth, setAuth] = useAuth();
   const [showPassengers, setShowPassengers] = useState(false);
@@ -24,7 +24,7 @@ const MyRides = () => {
       })
       .catch((error) => console.error("Error fetching rides:", error));
   }, [auth.id]);
-
+  // Sending ride cancelled mail
   const sendEmail = async (passengerEmail) => {
     try {
       await axios.post(
@@ -36,7 +36,7 @@ const MyRides = () => {
       console.log(error);
     }
   };
-
+//View passengers for particular ride
   const handleViewPassengers = (rideId) => {
     setShowPassengers(!showPassengers);
     setSelectedRide(rideId);
@@ -55,7 +55,7 @@ const MyRides = () => {
         setRides((prevRides) =>
           prevRides.map((ride) =>
             ride.publisherRideId === rideId
-              ? { ...ride, status: "ONGOING" }
+              ? {...ride, status: "ONGOING" }
               : ride
           )
         );
@@ -113,7 +113,7 @@ const MyRides = () => {
       }
 
       // Delete the ride
-      await axios.delete(
+      await axios.put(
         `https://api.sharemytrip.xyz/rides/cancel-published/${rideId}`
       );
 
@@ -121,14 +121,14 @@ const MyRides = () => {
       setRides((prevRides) =>
         prevRides.map((ride) =>
           ride.publisherRideId === rideId
-            ? { ...ride, status: "CANCELED" }
+            ? { ...ride, status: "CANCELLED" }
             : ride
         )
       );
       setFilteredRides((prevRides) =>
         prevRides.map((ride) =>
           ride.publisherRideId === rideId
-            ? { ...ride, status: "CANCELED" }
+            ? { ...ride, status: "CANCELLED" }
             : ride
         )
       );
@@ -182,7 +182,7 @@ const MyRides = () => {
               <option value="NOT_COMPLETED">Not Completed</option>
               <option value="ONGOING">Ongoing</option>
               <option value="COMPLETED">Completed</option>
-              <option value="CANCELED">Canceled</option>
+              <option value="CANCELLED">Cancelled</option>
             </select>
           </div>
           <div className="overflow-x-auto">
@@ -224,55 +224,51 @@ const MyRides = () => {
                     </td>
                     <td className="border px-4 py-2 text-center">{ride.status}</td>
                     <td className="border px-4 py-2 text-center">
-                      <div className="flex justify-center items-center space-x-2">
-                        <button
-                          onClick={() =>
-                            handleViewPassengers(ride.publisherRideId)
-                          }
-                          className="text-blue-500 hover:text-blue-700"
-                        >
-                          View
-                        </button>
-                        {ride.status !== "COMPLETED" &&
-                          ride.status !== "CANCELED" && (
-                            <>
-                              <button
-                                onClick={() =>
-                                  handleStartRide(ride.publisherRideId)
-                                }
-                                className={`text-green-500 hover:text-green-700 ${
-                                  !isStartButtonEnabled(ride)
-                                    ? "opacity-50 cursor-not-allowed"
-                                    : ""
-                                }`}
-                                disabled={!isStartButtonEnabled(ride)}
-                              >
-                                Start
-                              </button>
-                              {ride.status === "ONGOING" && (
-                                <button
-                                  onClick={() =>
-                                    handleEndRide(ride.publisherRideId)
-                                  }
-                                  className="text-red-500 hover:text-red-700"
-                                >
-                                  End
-                                </button>
-                              )}
-                              {ride.status !== "ONGOING" && (
-                                <button
-                                  onClick={() =>
-                                    openCancelModal(ride.publisherRideId)
-                                  }
-                                  className="text-yellow-500 hover:text-yellow-700"
-                                >
-                                  Cancel
-                                </button>
-                              )}
-                            </>
-                          )}
-                      </div>
-                    </td>
+  <div className="flex justify-center items-center space-x-2">
+    {ride.status !== "CANCELLED" && (
+      <button
+        onClick={() => handleViewPassengers(ride.publisherRideId)}
+        className="text-blue-500 hover:text-blue-700"
+      >
+        View
+      </button>
+    )}
+    {ride.status === "CANCELLED" ? (
+      <span className="text-red-500">Cancelled</span>
+    ) : (
+      <>
+        {ride.status !== "COMPLETED" && (
+          <>
+            <button
+              onClick={() => handleStartRide(ride.publisherRideId)}
+              className={`text-green-500 hover:text-green-700 ${
+                isStartButtonEnabled(ride) ? "" : "cursor-not-allowed opacity-50"
+              }`}
+              disabled={!isStartButtonEnabled(ride)}
+            >
+              Start
+            </button>
+            {ride.status ==="ONGOING" && <button
+              onClick={() => handleEndRide(ride.publisherRideId)}
+              className="text-yellow-500 hover:text-yellow-700"
+            >
+              End
+            </button>}
+            {ride.status !== "ONGOING" && (
+              <button
+                onClick={() => openCancelModal(ride.publisherRideId)}
+                className="text-red-500 hover:text-red-700"
+              >
+                Cancel
+              </button>
+            )}
+          </>
+        )}
+      </>
+    )}
+  </div>
+</td>
+
                   </tr>
                 ))}
               </tbody>
