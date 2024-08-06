@@ -189,7 +189,7 @@ const MyRides = () => {
                 Ongoing
               </option>
               <option value="COMPLETED">Completed</option>
-              <option value="NOT_COMPLETED">Not Completed / Cancelled</option>
+              <option value="NOT_COMPLETED">Not Completed</option>
               
               
             </select>
