@@ -19,7 +19,7 @@ const Dashboard = () => {
   }, [auth.id]);
   return (
     <Layout>
-      <main className="py-10 bg-[#fff4f1]">
+      <main className="h-full py-10 bg-[#fff4f1]">
         <h1 className="text-4xl text-center text-red-600 mb-10">
           Publisher Dashboard
         </h1>
