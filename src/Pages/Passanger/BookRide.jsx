@@ -312,6 +312,9 @@ const BookRide = () => {
                   <p className="text-gray-600 mb-1">
                     <strong>Departure Time:</strong> {ride.timeOfJourney}
                   </p>
+                   <p className="text-gray-600 mb-1">
+                    <strong>Journey Hours: </strong>{ride.journeyHours}
+                  </p>
                   <p className="text-gray-600 mb-1">
                     <strong>Fare per Seat:</strong> Rs.{ride.farePerSeat}
                   </p>
@@ -321,9 +324,7 @@ const BookRide = () => {
                   <p className="text-gray-600 mb-1">
                     <strong>Vehichle Model Name: </strong>{ride.vehicleModelName}
                   </p>
-                  <p className="text-gray-600 mb-1">
-                    <strong>Journey Hours: </strong>{ride.journeyHours}
-                  </p>
+                 
 
                   <div className="flex items-center mt-2">
                     <button
