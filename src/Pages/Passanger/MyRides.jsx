@@ -275,7 +275,7 @@ const MyRides = () => {
                         Payment Successful
                       </p>
                     )}
-                     {ride.passengerStatus === "CANCELLED" &&
+                     {ride.passengerStatus === "CANCELLED" && ride.publisherStatus ==="NOT_COMPLETED" &&
                       (<p className="text-red-600 font-bold mt-4">
                         Cancelled
                       </p>)
