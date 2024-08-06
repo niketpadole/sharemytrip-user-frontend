@@ -173,7 +173,7 @@ const MyRides = () => {
 
   return (
     <Layout>
-      <main className="py-10 bg-[#fff4f1]">
+      <main className="h-full py-10 bg-[#fff4f1]">
         <h1 className="text-4xl text-center text-red-600 mb-10">My Rides</h1>
         <section className="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
           <h2 className="text-2xl text-red-600 mb-6">Booked Rides</h2>
