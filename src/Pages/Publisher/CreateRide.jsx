@@ -292,12 +292,12 @@ const CreateRide = () => {
               </label>
               <input
                 type="number"
-                step="0.1"
+                step="1"
                 id="fare_per_seats"
                 name="fare_per_seats"
                 className="w-full p-2 border border-gray-300 rounded-md"
                 value={fare_per_seat}
-                min={parseFloat(initialFare) - 200} // Use initialFare for validation
+                min={parseFloat(initialFare) > 200 ? parseFloat(initialFare) - 200 : 1} // Use initialFare for validation
                 max={parseFloat(initialFare) + 200} // Use initialFare for validation
                 onChange={(e) => setFarePerSeats(e.target.value)}
               />
