@@ -23,7 +23,7 @@ const MyRides = () => {
 
   const onCancel = async () => {
     try {
-      const response = await axios.delete(
+      const response = await axios.put(
         `https://api.sharemytrip.xyz/user/passengers/cancel/${selectedRide.passengerRideId}`
       );
       if (response.status === 204) {
@@ -94,6 +94,7 @@ const MyRides = () => {
   };
 
   const fetchRides = async () => {
+    if (!auth.id) return;
     setLoading(true);
     try {
       const response = await axios.get(
@@ -131,10 +132,6 @@ const MyRides = () => {
     fetchRides();
   }, [auth.id]);
   
-
-  useEffect(() => {
-    fetchRides();
-  }, [auth.id]);
 
   const handleFilterChange = (status) => {
     setFilterStatus(status);
@@ -187,11 +184,13 @@ const MyRides = () => {
               className="text-gray-700 bg-white border border-gray-300 rounded-md"
             >
               <option value="ALL">All</option>
-              <option value="ONGOING" selected>
+              <option value="ONGOING" >
                 Ongoing
               </option>
               <option value="COMPLETED">Completed</option>
-              <option value="NOT_COMPLETED">Not Completed</option>
+              <option value="NOT_COMPLETED">Not Completed / Cancelled</option>
+              
+              
             </select>
           </div>
           {loading ? (
@@ -219,7 +218,7 @@ const MyRides = () => {
                     <strong>Date:</strong> {ride.date}
                   </p>
                   <p className="text-gray-600">
-                    <strong>Time:</strong> {ride.departureTime}
+                    <strong>Departure Time:</strong> {ride.departureTime}
                   </p>
                   <p className="text-gray-600">
                     <strong>Seats:</strong> {ride.passengerCount}
@@ -248,7 +247,7 @@ const MyRides = () => {
                     {ride.passengerPaymentStatus}
                   </p>
 
-                  {ride.publisherStatus === "NOT_COMPLETED" && (
+                  {ride.publisherStatus === "NOT_COMPLETED" && ride.passengerStatus==="NOT_COMPLETED" && (
                     <button
                       className="mt-4 text-red-500 hover:text-red-700"
                       onClick={() => {
@@ -276,6 +275,11 @@ const MyRides = () => {
                         Payment Successful
                       </p>
                     )}
+                     {ride.passengerStatus === "CANCELLED" &&
+                      (<p className="text-red-600 font-bold mt-4">
+                        Cancelled
+                      </p>)
+                    }
                 </div>
               ))}
             </div>
