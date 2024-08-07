@@ -122,7 +122,7 @@ const CreateRide = () => {
 
   const handleConfirm = async () => {
     try {
-      const formattedTime = new Date(`1970-01-01T${time_of_journey}:00`).toISOString().split("T")[1].split(".")[0];
+    const formattedTime = new Date(`1970-01-01T${time_of_journey}:00`).toTimeString().split(" ")[0];
       const response = await axios.post(
         `https://api.sharemytrip.xyz/user/publishers/${auth.id}/rides`,
         {
