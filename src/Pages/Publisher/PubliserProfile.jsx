@@ -48,19 +48,19 @@ const PublisherProfile = () => {
 
     if (!firstName) {
       tempErrors.firstName = 'First Name is required';
-    } else if (!/^[a-zA-Z]+$/.test(firstName)) {
+    } else if (!/^[a-zA-Z//s.]+$/.test(firstName)) {
       tempErrors.firstName = 'First Name must be a string';
     }
 
     if (!lastName) {
       tempErrors.lastName = 'Last Name is required';
-    } else if (!/^[a-zA-Z]+$/.test(lastName)) {
+    } else if (!/^[a-zA-Z//s.]+$/.test(lastName)) {
       tempErrors.lastName = 'Last Name must be a string';
     }
 
     if (!mobile) {
       tempErrors.mobile = 'Mobile is required';
-    } else if (!/^[789]\d{9}$/.test(mobile)) {
+    } else if (!/^[6789]\d{9}$/.test(mobile)) {
       tempErrors.mobile = 'Mobile must be 10 digits and start with 7, 8, or 9';
     }
 
